@@ -2,7 +2,6 @@ package tile;
 
 import My2DGame.main.GamePainel;
 
-import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.BufferedReader;
@@ -25,30 +24,31 @@ public class TileManager {
         getTileImage();
         loadMap();
     }
+    
     public void getTileImage(){
         try{
 
             tile[0] = new Tile();
-            tile[0].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tiles/grass.png"));
+            tile[0].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/tiles/grass.png"));
 
             tile[1] = new Tile();
-            tile[1].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tiles/wall.png"));
+            tile[1].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/tiles/wall.png"));
 
             tile[2] = new Tile();
-            tile[2].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tiles/water.png"));
+            tile[2].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/tiles/water.png"));
             tile[2].collision = true;
 
 
             tile[3] = new Tile();
-            tile[3].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tiles/earth.png"));
+            tile[3].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/tiles/earth.png"));
 
 
             tile[4] = new Tile();
-            tile[4].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tiles/sand.png"));
+            tile[4].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/tiles/sand.png"));
 
 
             tile[5] = new Tile();
-            tile[5].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("tiles/tree.png"));
+            tile[5].image = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/tiles/tree.png"));
             tile[5].collision = true;
 
 
@@ -61,7 +61,7 @@ public class TileManager {
     }
     public void loadMap(){
         try {
-            InputStream is = getClass().getClassLoader().getResourceAsStream("maps/map.txt");
+            InputStream is = getClass().getClassLoader().getResourceAsStream("res/maps/map.txt");
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             int col = 0;
@@ -74,6 +74,7 @@ public class TileManager {
                 while (col < gp.maxWorldCol){
 
                     String numbers[] = line.split(" ");
+                    
 
                     int num = Integer.parseInt(numbers[col]);
 
@@ -91,6 +92,16 @@ public class TileManager {
 
         }
     }
+    
+    public void drawTile(int col, int row, int num){
+        try {
+        	mapTileNum[col][row] = num;        
+        }
+        catch (Exception e){
+
+        }
+    }
+    
     public void draw(Graphics2D g2){
 
        int worldCol = 0;

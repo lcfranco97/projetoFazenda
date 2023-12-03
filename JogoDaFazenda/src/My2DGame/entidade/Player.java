@@ -7,7 +7,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Objects;
 
 public class Player extends Entity {
 
@@ -40,14 +39,14 @@ public class Player extends Entity {
     public void getPlayerImage(){
 
         try {
-            up1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/boy_up_1.png"));
-            up2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/boy_up_2.png"));
-            down1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/boy_down_1.png"));
-            down2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/boy_down_2.png"));
-            left1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/boy_left_1.png"));
-            left2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/boy_left_2.png"));
-            right1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/boy_right_1.png"));
-            right2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/boy_right_2.png"));
+            up1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/player/boy_up_1.png"));
+            up2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/player/boy_up_2.png"));
+            down1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/player/boy_down_1.png"));
+            down2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/player/boy_down_2.png"));
+            left1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/player/boy_left_1.png"));
+            left2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/player/boy_left_2.png"));
+            right1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/player/boy_right_1.png"));
+            right2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/player/boy_right_2.png"));
         }
         catch (IOException e){
             e.printStackTrace();
@@ -67,7 +66,7 @@ public class Player extends Entity {
     public void update(){
 
         if (keyH.upPressed == true ||  keyH.rightPressed == true || keyH.downPressed == true ||
-                keyH.leftPressed == true || keyH.rightPressed == true){
+                keyH.leftPressed == true || keyH.rightPressed == true || keyH.lPressed == true){
 
             if (keyH.upPressed == true){
                 direction = "up";
@@ -80,6 +79,22 @@ public class Player extends Entity {
             }
             else if (keyH.rightPressed == true) {
                 direction = "right";
+            } 
+            
+            if (keyH.lPressed == true) {
+            	int tileX = 0;
+            	int tileY = 0;
+            	
+            	if (worldX > 0) {
+            		tileX = worldX/45;
+            	}
+            	
+            	if (worldY > 0) {
+            		tileY = worldY/45;
+            	}
+
+            	gp.drawTile(tileX, tileY, 3);
+            	return;
             }
 
             // Check tile collision

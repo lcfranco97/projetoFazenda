@@ -11,7 +11,11 @@ public class Main {
         window.setTitle("Jogo da Fazenda");
 
         GamePainel gamePainel = new GamePainel();
-        window.add(gamePainel);
+        Menu menu = new Menu();
+        
+        JPanel mainMenu = menu.createMainMenu(window, menu.createRegisterScreen(window, gamePainel),  menu.createScoreScreen(window, gamePainel));
+        
+        window.add(mainMenu);
 
         window.pack();
 
@@ -19,11 +23,5 @@ public class Main {
         window.setVisible(true);
 
         gamePainel.startGameThread();
-
-
-
-
-
-
     }
 }
