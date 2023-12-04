@@ -36,7 +36,7 @@ public class GamePainel extends JPanel implements Runnable {
     public boolean finished = false;
     public String playerName = "";
     
-    public Inventory inventory = new Inventory();    
+    public Inventory inventory = new Inventory();
     
     public Tasks task1 = new Tasks("Juntar 1000 de ouro.", money, 1000, 1000, this);
     public Tasks task2 = new Tasks("Comprar 10 sementes.", inventory.getQuantityOfItemName("seeds"), 10, 100, this);
@@ -47,7 +47,7 @@ public class GamePainel extends JPanel implements Runnable {
 
     //FPS
     int FPS = 60;
-
+    public boolean openInventory = true;
     public TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
@@ -181,12 +181,15 @@ public class GamePainel extends JPanel implements Runnable {
         g2.drawString(task5.getTile() + String.valueOf(task5.getActual()) + "/" +  String.valueOf(task5.getGoal()), 600, 180);
         g2.drawString(task6.getTile() + String.valueOf(task6.getActual()) + "/" +  String.valueOf(task6.getGoal()), 600, 200);
         
+        if (openInventory) {
+        
         for (int i = 0; i < inventory.items.size(); i ++) {
         	try {
         	g2.drawImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream(inventory.items.get(i).getImage())), 20 + 86 * i, 500, 64, 64, null);
         	} catch (IOException e){
                 e.printStackTrace();
             }
+        }
         }
         
         

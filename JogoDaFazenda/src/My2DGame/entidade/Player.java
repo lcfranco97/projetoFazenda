@@ -128,6 +128,14 @@ public class Player extends Entity {
             	return;
             } 
             
+            if (keyH.iPressed == true) {
+            	if (gp.openInventory) {
+            		gp.openInventory = false;
+            	} else {
+            		gp.openInventory = true;
+            	}
+            } 
+            
             if (keyH.onepressed == true) {
             	gp.inventory.addQuantityOfItemName("seed", "res/inventory/semente.jpg", 1, task2);
             	gp.money -= 10;
