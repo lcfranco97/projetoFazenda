@@ -4,6 +4,8 @@ import My2DGame.main.GamePainel;
 import My2DGame.main.KeyHandler;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -15,10 +17,24 @@ public class Player extends Entity {
 
     public final int screenX;
     public final int screenY;
-
-    public Player(GamePainel gp, KeyHandler keyH){
+    public JFrame window;
+    Tasks task1;
+    Tasks task2;
+    Tasks task3;
+    Tasks task4;
+    Tasks task5;
+    Tasks task6;
+    int money;
+    
+    public Player(GamePainel gp, KeyHandler keyH, Tasks task5, Tasks task3, Tasks task4, Tasks task2, Tasks task6, Tasks task1){
         this.gp = gp;
         this.keyH = keyH;
+        this.task2 = task2;
+        this.task3 = task3;
+        this.task4 = task4;
+        this.task5 = task5;
+        this.task6 = task6;
+        this.task1= task1;
 
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
@@ -32,12 +48,9 @@ public class Player extends Entity {
 
         setDefaultValues();
         getPlayerImage();
-
-
-
     }
+    
     public void getPlayerImage(){
-
         try {
             up1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/player/boy_up_1.png"));
             up2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/player/boy_up_2.png"));
@@ -51,8 +64,6 @@ public class Player extends Entity {
         catch (IOException e){
             e.printStackTrace();
         }
-
-
     }
 
 
@@ -66,7 +77,7 @@ public class Player extends Entity {
     public void update(){
 
         if (keyH.upPressed == true ||  keyH.rightPressed == true || keyH.downPressed == true ||
-                keyH.leftPressed == true || keyH.rightPressed == true || keyH.lPressed == true){
+                keyH.leftPressed == true || keyH.rightPressed == true || keyH.lPressed == true || keyH.onepressed == true || keyH.twopressed == true){
 
             if (keyH.upPressed == true){
                 direction = "up";
@@ -79,7 +90,7 @@ public class Player extends Entity {
             }
             else if (keyH.rightPressed == true) {
                 direction = "right";
-            } 
+            }
             
             if (keyH.lPressed == true) {
             	int tileX = 0;
@@ -92,10 +103,46 @@ public class Player extends Entity {
             	if (worldY > 0) {
             		tileY = worldY/45;
             	}
-
-            	gp.drawTile(tileX, tileY, 3);
+            	
+            	if (gp.tileM.mapTileNum[tileX][tileY] == 12) {
+            		gp.inventory.addQuantityOfItemName("milk","res/inventory/leite.png", 1, task5);
+            	} else if (gp.tileM.mapTileNum[tileX][tileY] == 13) {
+            		gp.inventory.addQuantityOfItemName("la","res/inventory/la.png", 1);
+            	} else if (gp.tileM.mapTileNum[tileX][tileY] == 14) {
+            		gp.inventory.addQuantityOfItemName("egg","res/inventory/ovo.png", 1);
+            	} else {
+            		if (gp.tileM.mapTileNum[tileX][tileY] == 3) {
+            			gp.drawTile(tileX, tileY, 15);
+            			task3.setActual(task3.actual + 1);
+                	} else if (gp.tileM.mapTileNum[tileX][tileY] == 15) {
+                		gp.drawTile(tileX, tileY, 16);
+                	} else if (gp.tileM.mapTileNum[tileX][tileY] == 16) {
+                		gp.drawTile(tileX, tileY, 3);
+                		gp.inventory.addQuantityOfItemName("corn","res/inventory/milho.png", 1, task4);
+                	} else if (gp.tileM.mapTileNum[tileX][tileY] == 0){
+                		gp.drawTile(tileX, tileY, 3);
+                	}
+            	}
+            	
+            	keyH.lPressed = false;
             	return;
-            }
+            } 
+            
+            if (keyH.onepressed == true) {
+            	gp.inventory.addQuantityOfItemName("seed", "res/inventory/semente.jpg", 1, task2);
+            	gp.money -= 10;
+            	keyH.onepressed = false;
+            	task1.setActual(gp.money);
+            	return;
+            } 
+            
+            if (keyH.twopressed == true) {
+            	task6.setActual(task6.actual + 1);
+            	keyH.twopressed = false;
+            	gp.money += 50;
+            	task1.setActual(gp.money);
+            	return;
+            } 
 
             // Check tile collision
             collisionOn = false;
@@ -133,9 +180,6 @@ public class Player extends Entity {
 
     }
     public void draw(Graphics2D g2){
-
-      //    g2.setColor(Color.white);
-      //    g2.fillRect(x,y,gp.tileSize, gp.tileSize);
 
         BufferedImage image = null;
 

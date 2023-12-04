@@ -28,15 +28,34 @@ public class Inventory extends Entity {
          		quantity = items.get(i).quantity;
          	}
          }
-    	System.out.print(quantity);
     	return quantity;
     }
     
-    public void addQuantityOfItemName(String name, int quantity) {
-    	 for (int i = 0; i < items.size(); i ++) {
-         	if (items.get(i).name == name) {
-         		items.get(i).setQuantity(quantity);
+    public void addQuantityOfItemName(String name, String image, int quantity) {
+    	boolean added = false;
+    	for (int i = 0; i < items.size(); i ++) {
+        	if (items.get(i).name == name) {
+         		items.get(i).setQuantity(items.get(i).quantity + quantity);
+         		added = true;
          	}
-         }
+        }
+    	 
+    	if (!added) {
+    		items.add(new Items(name, image, quantity));
+    	}
+    }
+    
+    public void addQuantityOfItemName(String name, String image, int quantity, Tasks task) {
+    	boolean added = false;
+    	for (int i = 0; i < items.size(); i ++) {
+        	if (items.get(i).name == name) {
+         		items.get(i).setQuantity(items.get(i).quantity + quantity);
+         		added = true;
+         	}
+        }
+    	 
+    	if (!added) {
+    		items.add(new Items(name, image, quantity, task));
+    	}
     }
 }

@@ -33,36 +33,39 @@ public class GamePainel extends JPanel implements Runnable {
     public int time = 0;
     public int money = 200;
     public int points = 0;
+    public boolean finished = false;
+    public String playerName = "";
     
     public Inventory inventory = new Inventory();    
     
-    public Tasks task1 = new Tasks("Juntar 1000 de ouro.", money, 1000, 1000);
-    public Tasks task2 = new Tasks("Comprar 10 sementes.", inventory.getQuantityOfItemName("seeds"), 10, 100);
-    public Tasks task3 = new Tasks("Plantar 10 sementes.", inventory.getQuantityOfItemName("seeds"), 10, 100);
-    public Tasks task4 = new Tasks("Coletar 10 milhos.", inventory.getQuantityOfItemName("corns"), 10, 500);
-    public Tasks task5 = new Tasks("Coletar 10 leites.", inventory.getQuantityOfItemName("milks"), 10, 100);
-    public Tasks task6 = new Tasks("Vender 20 itens.", inventory.getQuantityOfItemName("seeds"), 1000, 500);  
-    
+    public Tasks task1 = new Tasks("Juntar 1000 de ouro.", money, 1000, 1000, this);
+    public Tasks task2 = new Tasks("Comprar 10 sementes.", inventory.getQuantityOfItemName("seeds"), 10, 100, this);
+    public Tasks task3 = new Tasks("Plantar 10 sementes.", inventory.getQuantityOfItemName("seeds"), 10, 100, this);
+    public Tasks task4 = new Tasks("Coletar 10 milhos.", inventory.getQuantityOfItemName("corns"), 10, 500, this);
+    public Tasks task5 = new Tasks("Coletar 10 leites.", inventory.getQuantityOfItemName("milks"), 10, 100, this);
+    public Tasks task6 = new Tasks("Vender 20 itens.", inventory.getQuantityOfItemName("seeds"), 20, 500, this);  
 
     //FPS
     int FPS = 60;
 
-    TileManager tileM = new TileManager(this);
+    public TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
-    public Player player = new Player(this,keyH);
+    public JFrame window;
+     
+    public Player player = new Player(this,keyH, task5, task3, task4, task2, task6, task1);
 
-    public GamePainel(){
+    public GamePainel(JFrame window){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
-        this.setFocusable(true);     
+        this.setFocusable(true);
+        this.window = window;
         
-        inventory.addItem(new Items("Pá", "res/inventory/pa.jpg", 1), 1);
-        inventory.addItem(new Items("Pá", "res/inventory/regador.jpg", 1), 1);
-        inventory.addItem(new Items("corns", "res/inventory/milho.jpg", 1, task4), 5);
+        inventory.addItem(new Items("Pá", "res/inventory/pa.png", 1), 1);
+        inventory.addItem(new Items("Regador", "res/inventory/regador.png", 1), 1);
     }
 
     public void startGameThread(){
@@ -97,6 +100,22 @@ public class GamePainel extends JPanel implements Runnable {
 
             } catch (InterruptedException e){
                 e.printStackTrace();
+            }
+            
+            if (task1.completed && task2.completed && task3.completed && task4.completed && task5.completed && task6.completed && !finished) {
+            	Menu menu = new Menu();
+            	
+            	window.add(menu.createEndGame(window, true, playerName, points));
+            	this.setVisible(false);
+            	finished = true;
+            }
+            
+            if (time > 20000 && !finished) {
+            	Menu menu = new Menu();
+            	
+            	window.add(menu.createEndGame(window, false, playerName, points));
+            	this.setVisible(false);
+            	finished = true;
             }
 
         }
@@ -144,9 +163,16 @@ public class GamePainel extends JPanel implements Runnable {
         tileM.draw(g2);
         player.draw(g2);
         
-        g2.drawString("Hora: " + createString(), 700, 20);
-        g2.drawString("Dinheiro: " + String.valueOf(money), 700, 40);
-        g2.drawString("Pontos: " + String.valueOf(points), 700, 60);
+        try {
+        	g2.drawImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/inventory/backgroundmissions.png")), 580, 5, 190, 210, null);
+        	} catch (IOException e){
+                e.printStackTrace();
+            }
+
+       
+        g2.drawString("Hora: " + createString(), 600, 20);
+        g2.drawString("Dinheiro: " + String.valueOf(money), 600, 40);
+        g2.drawString("Pontos: " + String.valueOf(points), 600, 60);
         
         g2.drawString(task1.getTile() + String.valueOf(task1.getActual()) + "/" +  String.valueOf(task1.getGoal()), 600, 100);
         g2.drawString(task2.getTile() + String.valueOf(task2.getActual()) + "/" +  String.valueOf(task2.getGoal()), 600, 120);
@@ -162,7 +188,8 @@ public class GamePainel extends JPanel implements Runnable {
                 e.printStackTrace();
             }
         }
-
+        
+        
         g2.dispose();
 
     }

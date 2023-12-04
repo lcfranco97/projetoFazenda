@@ -112,7 +112,7 @@ public class Menu extends JPanel {
                 Image.SCALE_SMOOTH);
         
         exitButton.setIcon(new ImageIcon(exitResized));
-        panel.setComponentZOrder(scoreButton, 0);
+        panel.setComponentZOrder(exitButton, 0);
         
         return panel;
     	}
@@ -124,7 +124,7 @@ public class Menu extends JPanel {
     
     }
     
-    public JPanel createRegisterScreen(JFrame window, JPanel jpanel) {
+    public JPanel createRegisterScreen(JFrame window, GamePainel jpanel) {
         JPanel panel = new JPanel();
         try {
         panel.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -193,22 +193,10 @@ public class Menu extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-				try {
-					BufferedWriter writer = new BufferedWriter(new FileWriter("score.txt", true));
-					
-					writer.write(name.getText());
-					writer.newLine();
-	            	writer.close();
+				panel.setVisible(false);
 	            	
-	            	panel.setVisible(false);
-	            	window.add(jpanel);
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				jpanel.playerName = name.getText();
+				window.add(jpanel);
             }
         });
         
@@ -229,7 +217,7 @@ public class Menu extends JPanel {
         return panel;
     }
     
-    public JPanel createScoreScreen(JFrame window, JPanel jpanel) {
+    public JPanel createScoreScreen(JFrame window, GamePainel jpanel) {
         JPanel panel = new JPanel();
         try {
         panel.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -299,6 +287,94 @@ public class Menu extends JPanel {
         }
         
         return panel;
+    }
+    
+    
+    public JPanel createEndGame(JFrame window, boolean win, String playerName, int points) {
+    	JPanel panel = new JPanel(null);
+    	try {
+
+        	try {
+				BufferedWriter writer = new BufferedWriter(new FileWriter("score.txt", true));
+				
+				writer.write(playerName);
+				writer.write("-");
+				writer.write(String.valueOf(points));
+				writer.newLine();
+            	writer.close();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        
+        panel.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        panel.setLayout(null);
+        panel.setVisible(true);
+
+        JLabel background = new JLabel();
+        ImageIcon icon = new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/menu/background.jpg")));
+        Image image = icon.getImage();
+
+        Image resized = image.getScaledInstance(screenWidth, screenHeight,
+                Image.SCALE_SMOOTH);
+        
+        background.setIcon(new ImageIcon(resized));
+        background.setBounds(0,0, screenWidth, screenHeight);
+        panel.add(background);
+   
+        JButton exitButton = new JButton("Sair");
+        exitButton.setBounds(350, 400, 150, 40);
+        panel.add(exitButton);
+        
+        exitButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {            	
+            	System.exit(0);
+            }
+        });
+        
+        ImageIcon exitIcon = new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/menu/btexit.jpg")));
+        Image exitImage = exitIcon.getImage();
+
+        Image exitResized = exitImage.getScaledInstance(150, 40,
+                Image.SCALE_SMOOTH);
+        
+        exitButton.setIcon(new ImageIcon(exitResized));
+        panel.setComponentZOrder(exitButton, 0);
+        
+        JLabel victory = new JLabel();
+        
+        ImageIcon victoryIcon;
+        
+        if (win) {
+        	victoryIcon = new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/menu/vitoria.png")));
+        } else {
+        	victoryIcon = new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("res/menu/derrota.png")));
+        }
+        
+        Image victoryImage = victoryIcon.getImage();
+
+        Image victoryResized = victoryImage.getScaledInstance(400, 100,
+                Image.SCALE_SMOOTH);
+        
+        victory.setIcon(new ImageIcon(victoryResized));
+        victory.setBounds(200,50, 400, 100);
+        
+        panel.add(victory);
+        panel.setComponentZOrder(victory, 0);
+        
+        return panel;
+    	}
+    
+    catch (IOException e){
+        e.printStackTrace();
+    }
+		return panel;
+    
     }
 
 }

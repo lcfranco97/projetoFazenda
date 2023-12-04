@@ -10,7 +10,7 @@ public class Main {
         window.setResizable(false);
         window.setTitle("Jogo da Fazenda");
 
-        GamePainel gamePainel = new GamePainel();
+        GamePainel gamePainel = new GamePainel(window);
         Menu menu = new Menu();
         
         JPanel mainMenu = menu.createMainMenu(window, menu.createRegisterScreen(window, gamePainel),  menu.createScoreScreen(window, gamePainel));
